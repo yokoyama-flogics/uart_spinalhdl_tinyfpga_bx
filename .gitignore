@@ -20,9 +20,21 @@ project/plugins/project/
 .idea
 out
 
+# Eclipse
+bin/
+.classpath
+.project
+.settings
+.cache-main
 
 #User
-*.vhd
+/*.vhd
+/*.v
 *.cf
 *.json
+*.vcd
 !tester/src/test/resources/*.vhd
+
+
+simWorkspace/
+tmp/
