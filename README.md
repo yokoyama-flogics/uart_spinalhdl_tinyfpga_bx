@@ -1,4 +1,4 @@
-# Sleepy PWM LED by SpinalHDL for TinyFPGA BX
+# Beginner's UART by SpinalHDL for TinyFPGA BX
 
 This is my second [SpinalHDL](https://github.com/SpinalHDL) design for
 [TinyFPGA BX](https://tinyfpga.com/bx/guide.html).
