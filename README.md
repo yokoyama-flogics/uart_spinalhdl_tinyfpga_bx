@@ -8,7 +8,7 @@ This is my second [SpinalHDL](https://github.com/SpinalHDL) design for
 A SpinalHDL tutorial for software designer (written in Japanese) is provided
 on my work blog.
 
-- [Part 1: Writing UART by SpinalHDL](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part1/)
+- [Part 1: How Software Programmers Design a UART](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part1/)
 
 ## Required Hardware
 
