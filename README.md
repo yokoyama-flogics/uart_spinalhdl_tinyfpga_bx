@@ -1,108 +1,59 @@
-Spinal Base Project
-============
-This repository is a base SBT project added to help non Scala/SBT native people in their first steps.
+# Sleepy PWM LED by SpinalHDL for TinyFPGA BX
 
-Just one important note, you need a java JDK >= 8
+This is my second [SpinalHDL](https://github.com/SpinalHDL) design for
+[TinyFPGA BX](https://tinyfpga.com/bx/guide.html).
 
-On debian : 
+## Tutorial by Blog
 
-```sh
-sudo add-apt-repository -y ppa:openjdk-r/ppa
-sudo apt-get update
-sudo apt-get install openjdk-8-jdk -y
+A SpinalHDL tutorial for software designer (written in Japanese) is provided
+on my work blog.
 
-#To set the default java
-sudo update-alternatives --config java
-sudo update-alternatives --config javac
-```
+- [Part 1: Writing UART by SpinalHDL](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part1/)
 
-## Basics, without any IDE
+## Required Hardware
 
-You need to install SBT
+- TinyFPGA BX board
 
-```sh
-echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-sudo apt-get update
-sudo apt-get install sbt
-```
+  - [TinyFPGA](https://tinyfpga.com/)
+  - [Crowd Supply](https://www.crowdsupply.com/tinyfpga/tinyfpga-bx)
 
-If you want to run the scala written testbench, you have to be on linux and have Verilator installed (a recent version) :
+## Required Software
 
-```sh
-sudo apt-get install git make autoconf g++ flex bison -y  # First time prerequisites
-git clone http://git.veripool.org/git/verilator   # Only first time
-unsetenv VERILATOR_ROOT  # For csh; ignore error if on bash
-unset VERILATOR_ROOT  # For bash
-cd verilator
-git pull        # Make sure we're up-to-date
-git checkout verilator_3_916
-autoconf        # Create ./configure script
-./configure
-make -j$(nproc)
-sudo make install
-cd ..
-echo "DONE"
+- [sbt](https://www.scala-sbt.org/)
 
-```
+  Please refer
+  [this page](https://spinalhdl.github.io/SpinalDoc/spinal_getting_started/)
+  to install sbt.
 
-Clone or download this repository.
+- [Yosys](http://www.clifford.at/yosys/)
 
-```sh
-git clone https://github.com/SpinalHDL/SpinalTemplateSbt.git
-```
+  [This page](http://www.clifford.at/icestorm/) is helpful to install Yosys.
 
-Open a terminal in the root of it and run "sbt run". At the first execution, the process could take some seconds
+- [IceStorm Tools](https://github.com/cliffordwolf/icestorm)
 
-```sh
-cd SpinalTemplateSbt
+   Please refer [this page](http://www.clifford.at/icestorm/) again.
 
-//If you want to generate the Verilog of your design
-sbt "runMain mylib.MyTopLevelVerilog"
+- [nextpnr](https://github.com/YosysHQ/nextpnr)
 
-//If you want to generate the VHDL of your design
-sbt "runMain mylib.MyTopLevelVhdl"
+  The official GitHub site and also
+  [this page](http://www.clifford.at/icestorm/) is helpful.
 
-//If you want to run the scala written testbench
-sbt "runMain mylib.MyTopLevelSim"
-```
+- [tinyprog](https://github.com/tinyfpga/TinyFPGA-Bootloader/tree/master/programmer)
 
-The top level spinal code is defined into src\main\scala\mylib
+  This [TinyFPGA BX User Guide](https://tinyfpga.com/bx/guide.html) is a
+  good starting point to begin TinyFPGA BX.
 
-## Basics, with Intellij IDEA and its scala plugin
+- OPTIONAL: [ice40_viewer](https://github.com/knielsen/ice40_viewer)
 
-You need to install :
+  It generates layout views of your design, but it is optional.
 
-- Java JDK 8
-- SBT
-- Intellij IDEA (the free Community Edition is good enough)
-- Intellij IDEA Scala plugin (when you run Intellij IDEA the first time, he will ask you about it)
+## Building by make
 
-And do the following :
+NOTE: If you run ice40_viewer, please modify 'ICEVIEW' line in the Makefile
+according to your installation.
 
-- Clone or download this repository.
-- In Intellij IDEA, "import project" with the root of this repository, Import project from external model SBT
-- In addition maybe you need to specify some path like JDK to Intellij
-- In the project (Intellij project GUI), go in src/main/scala/mylib/MyTopLevel.scala, right click on MyTopLevelVerilog, "Run MyTopLevelVerilog"
+- ```make```: Building bit-stream file for TinyFPGA BX
 
-Normally, this must generate an MyTopLevel.v output files.
+- ```make html```: Generating a layout view by ice40_viewer
 
-## Basics, with Eclipse and its scala plugin
-
-You need to install :
-
-- Java JDK
-- Scala
-- SBT
-- Eclipse (tested with Mars.2 - 4.5.2)
-- [scala plugin](http://scala-ide.org/) (tested with 4.4.1)
-
-And do the following :
-
-- Clone or download this repository.
-- Run ```sbt eclipse``` in the ```SpinalTemplateSbt``` directory.
-- Import the eclipse project from eclipse.
-- In the project (eclipse project GUI), right click on src/main/scala/mylib/MyTopLevel.scala, right click on MyTopLevelVerilog, and select run it
-
-Normally, this must generate output file ```MyTopLevel.v```.
-
+- ```make upload```: Uploading a bit-stream file to TinyFPGA BX
