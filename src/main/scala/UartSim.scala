@@ -30,3 +30,22 @@ object UartCoreSim {
     }
   }
 }
+
+object UartTxStringSim {
+  def main(args: Array[String]): Unit = {
+    SimConfig.withWave.doSim(
+      new UartTxString(
+        str = "Hello World! ",
+        clock_rate = 16 MHz,
+        bit_rate = 115200 Hz
+      )
+    ) { dut =>
+      //Fork a process to generate the reset and the clock on the dut
+      dut.clockDomain.forkStimulus(period = 10)
+
+      for (idx <- 0 to 5000) {
+        dut.clockDomain.waitSampling()
+      }
+    }
+  }
+}

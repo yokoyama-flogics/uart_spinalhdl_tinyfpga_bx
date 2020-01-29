@@ -1,4 +1,84 @@
 import spinal.core._
+import spinal.lib.fsm._
+import spinal.lib.Counter
+
+class UartTxString(
+    str: String,
+    clock_rate: HertzNumber,
+    bit_rate: HertzNumber
+) extends Component {
+  val io = new Bundle {
+    val txd = out Bool
+  }
+
+  val chr_size = 8 // bits
+
+  /*
+   * References:
+   *   https://spinalhdl.github.io/SpinalDoc-RTD/SpinalHDL/Getting%20Started/presentation.html (class SinusGenerator)
+   *   https://spinalhdl.github.io/SpinalDoc-RTD/SpinalHDL/Data%20types/bits.html
+   *   https://stackoverflow.com/questions/5052042/how-to-split-strings-into-characters-in-scala
+   *   https://groups.google.com/forum/#!topic/scala-user/po68d2V0szM
+   */
+  def chrTable =
+    (0 until str.length).map(i => {
+      B(str.toList(i).toInt, chr_size bits)
+    })
+  SpinalInfo("chrTable: " + chrTable.toString)
+  val rom_str = Mem(Bits(chr_size bits), initialContent = chrTable)
+  val n_char_sent = Reg(UInt(log2Up(str.length) bits))
+
+  val uart = new UartCore(
+    len_data = chr_size,
+    clock_rate = clock_rate,
+    bit_rate = bit_rate
+  )
+  uart.io.txd <> io.txd
+
+  uart.io.valid := False
+  uart.io.payload := 0
+
+  val fsm = new StateMachine {
+    val init = new State with EntryPoint
+    val waiting = new State
+    val active = new State
+    val ct_init = Counter(4 bits)
+    val ct_waiting = Counter(clock_rate.toBigDecimal.rounded.toBigInt)
+
+    init
+      .whenIsActive {
+        uart.io.valid := False
+        uart.io.payload := 0
+        n_char_sent := 0
+        ct_init.increment()
+        when(ct_init.willOverflow) {
+          goto(waiting)
+        }
+      }
+
+    waiting
+      .whenIsActive {
+        uart.io.valid := False
+        uart.io.payload := 0
+        ct_waiting.increment()
+        when(ct_waiting.willOverflow) {
+          goto(active)
+        }
+      }
+
+    active
+      .whenIsActive {
+        uart.io.valid := True
+        uart.io.payload := rom_str.readSync(n_char_sent)
+        when(uart.io.ready) {
+          n_char_sent := n_char_sent + 1
+          when(n_char_sent === str.length) {
+            goto(waiting)
+          }
+        }
+      }
+  }
+}
 
 class Uart_TinyFPGA_BX extends Component {
   val io = new Bundle {
@@ -22,14 +102,12 @@ class Uart_TinyFPGA_BX extends Component {
   val coreArea = new ClockingArea(coreClockDomain) {
     io.USBPU := False
 
-    val uart = new UartCore(
-      len_data = 8,
+    val uart_tx_str = new UartTxString(
+      str = "Hello World! ",
       clock_rate = ClockDomain.current.frequency.getValue,
       bit_rate = 115200 Hz
     )
-    uart.io.txd <> io.TXD
-    uart.io.valid <> True
-    uart.io.payload <> 65
+    uart_tx_str.io.txd <> io.TXD
   }
 }
 
