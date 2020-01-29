@@ -33,4 +33,5 @@ upload: $(TOPNAME).bin
 	tinyprog -p $^
 
 clean:
-	@rm -f $(TOPNAME).asc $(TOPNAME).json $(CLASSNAME).v
+	@rm -f $(TOPNAME).asc $(TOPNAME).json $(CLASSNAME).v yosys.log \
+		verbose.log
