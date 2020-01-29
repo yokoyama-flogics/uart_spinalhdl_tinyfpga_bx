@@ -1,7 +1,12 @@
+import Math.round
 import spinal.core._
 import spinal.lib.fsm._
 
-class UartCore(len_data: Int) extends Component {
+class UartCore(
+    len_data: Int,
+    clock_rate: HertzNumber,
+    bit_rate: HertzNumber
+) extends Component {
   val io = new Bundle {
     val valid = in Bool
     val ready = out Bool
@@ -9,7 +14,12 @@ class UartCore(len_data: Int) extends Component {
     val txd = out Bool
   }
 
-  val period_timer = 16 * 1000 * 1000 / 115200
+  // val period_timer = (clock_rate / bit_rate).rounded.toBigInt
+  SpinalInfo("current MathContext = " + clock_rate.toBigDecimal.mc.toString)
+  val period_timer = (clock_rate / bit_rate)
+    .setScale(0, BigDecimal.RoundingMode.HALF_UP)
+    .toBigInt
+  SpinalInfo("period_timer = " + period_timer.toString)
 
   /*
    * Registers
@@ -84,6 +94,12 @@ class UartCore(len_data: Int) extends Component {
 
 object UartCoreVerilog {
   def main(args: Array[String]): Unit = {
-    SpinalVerilog(new UartCore(len_data = 8))
+    SpinalVerilog(
+      new UartCore(
+        len_data = 8,
+        clock_rate = 16 MHz,
+        bit_rate = 115200 Hz
+      )
+    )
   }
 }
