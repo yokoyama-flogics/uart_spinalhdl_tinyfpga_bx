@@ -22,7 +22,7 @@ class Uart_TinyFPGA_BX extends Component {
   val coreArea = new ClockingArea(coreClockDomain) {
     io.USBPU := False
 
-    val uart = new UartCore(len_data = 8, verbose_delay = true)
+    val uart = new UartCore(len_data = 8)
     uart.io.txd <> io.TXD
     uart.io.valid <> True
     uart.io.payload <> 65

@@ -1,7 +1,7 @@
 import spinal.core._
 import spinal.lib.fsm._
 
-class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
+class UartCore(len_data: Int) extends Component {
   val io = new Bundle {
     val valid = in Bool
     val ready = out Bool
@@ -12,20 +12,10 @@ class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
   val period_timer = 16 * 1000 * 1000 / 115200
 
   /*
-   * To ensure that receiver detects start bit correctly.
-   */
-  var tmp_period: Int = 0
-  if (verbose_delay) {
-    tmp_period = 10 * period_timer
-  } else {
-    tmp_period = period_timer
-  }
-
-  /*
    * Registers
    */
   val n_bits_sent = Reg(UInt(log2Up(len_data) bits)) // # bits already sent
-  val ct_timer = Reg(UInt(log2Up(tmp_period) bits))
+  val ct_timer = Reg(UInt(log2Up(period_timer) bits))
   val data = Reg(Bits(len_data bits))
 
   /*
@@ -94,6 +84,6 @@ class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
 
 object UartCoreVerilog {
   def main(args: Array[String]): Unit = {
-    SpinalVerilog(new UartCore(len_data = 8, verbose_delay = true))
+    SpinalVerilog(new UartCore(len_data = 8))
   }
 }
