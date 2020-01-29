@@ -21,10 +21,21 @@ class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
     tmp_period = period_timer
   }
 
+  /*
+   * Registers
+   */
   val n_bits_sent = Reg(UInt(log2Up(len_data) bits)) // # bits already sent
-  // val ct_timer = Reg(UInt((16 * 1000 * 1000 / 115200) bits))
   val ct_timer = Reg(UInt(log2Up(tmp_period) bits))
   val data = Reg(Bits(len_data bits))
+
+  /*
+   * Clock Divider Counter
+   */
+  val ct_full: Bool = (ct_timer === period_timer - 1)
+  ct_timer := ct_timer + 1
+  when(ct_full) {
+    ct_timer := 0
+  }
 
   io.ready := False
   io.txd := True
@@ -49,22 +60,18 @@ class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
 
     startbit
       .whenIsActive {
-        ct_timer := ct_timer + 1
         io.ready := False
         io.txd := False
-        when(ct_timer === period_timer - 1) {
-          ct_timer := 0
+        when(ct_full) {
           goto(sending)
         }
       }
 
     sending
       .whenIsActive {
-        ct_timer := ct_timer + 1
         io.ready := False
         io.txd := data(0)
-        when(ct_timer === period_timer - 1) {
-          ct_timer := 0
+        when(ct_full) {
           data := (data >> 1).resized
           n_bits_sent := n_bits_sent + 1
           when(n_bits_sent === len_data - 1) {
@@ -76,12 +83,9 @@ class UartCore(len_data: Int, verbose_delay: Boolean) extends Component {
 
     stopbit
       .whenIsActive {
-        ct_timer := ct_timer + 1
         io.ready := False
         io.txd := True
-
-        when(ct_timer === tmp_period - 1) {
-          ct_timer := 0
+        when(ct_full) {
           goto(idle)
         }
       }
