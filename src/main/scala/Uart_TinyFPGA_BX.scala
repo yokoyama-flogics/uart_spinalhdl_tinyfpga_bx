@@ -5,7 +5,8 @@ import spinal.lib.Counter
 class UartTxString(
     str: String,
     clock_rate: HertzNumber,
-    bit_rate: HertzNumber
+    bit_rate: HertzNumber,
+    delayed_start: Boolean = false
 ) extends Component {
   val io = new Bundle {
     val txd = out Bool
@@ -39,13 +40,20 @@ class UartTxString(
   uart.io.payload := 0
 
   val fsm = new StateMachine {
-    val init = new State with EntryPoint
-    val waiting = new State
-    val active = new State
-    val ct_init = Counter(4 bits)
+    var waiting: State = null
+    var active: State = null
     val ct_waiting = Counter(clock_rate.toBigDecimal.rounded.toBigInt)
 
-    init
+    if (delayed_start) {
+      waiting = new State with EntryPoint
+      active = new State
+    } else {
+      waiting = new State
+      active = new State with EntryPoint
+    }
+
+    /*
+    init_no_more_used
       .whenIsActive {
         uart.io.valid := False
         uart.io.payload := 0
@@ -55,6 +63,7 @@ class UartTxString(
           goto(waiting)
         }
       }
+     */
 
     waiting
       .whenIsActive {
@@ -118,7 +127,8 @@ class Uart_TinyFPGA_BX extends Component {
     val uart_tx_str = new UartTxString(
       str = "Hello World! ",
       clock_rate = ClockDomain.current.frequency.getValue,
-      bit_rate = 115200 Hz
+      bit_rate = 115200 Hz,
+      delayed_start = true
     )
     uart_tx_str.io.txd <> io.TXD
   }
