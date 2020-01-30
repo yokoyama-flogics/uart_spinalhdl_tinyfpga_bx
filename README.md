@@ -9,6 +9,7 @@ A SpinalHDL tutorial for software designer (written in Japanese) is provided
 on my work blog.
 
 - [Part 1: How Software Programmers Design a UART](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part1/)
+- [Part 2: Improving the UART (Elaborating Design and Adding String Transmission)](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part2/)
 
 ## Required Hardware
 
