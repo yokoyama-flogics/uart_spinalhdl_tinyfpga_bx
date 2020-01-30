@@ -26,7 +26,7 @@ class UartTxString(
     })
   SpinalInfo("chrTable: " + chrTable.toString)
   val rom_str = Mem(Bits(chr_size bits), initialContent = chrTable)
-  val n_char_sent = Reg(UInt(log2Up(str.length) bits))
+  val n_char_sent = Reg(UInt(log2Up(str.length) bits)) init (0)
 
   val uart = new UartCore(
     len_data = chr_size,

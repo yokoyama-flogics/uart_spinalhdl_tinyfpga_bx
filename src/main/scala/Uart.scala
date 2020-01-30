@@ -24,9 +24,9 @@ class UartCore(
   /*
    * Registers
    */
-  val n_bits_sent = Reg(UInt(log2Up(len_data) bits)) // # bits already sent
-  val ct_timer = Reg(UInt(log2Up(period_timer) bits))
-  val data = Reg(Bits(len_data bits))
+  val n_bits_sent = Reg(UInt(log2Up(len_data) bits)) init (0)
+  val ct_timer = Reg(UInt(log2Up(period_timer) bits)) init (0)
+  val data = Reg(Bits(len_data bits)) init (0)
 
   /*
    * Clock Divider Counter
