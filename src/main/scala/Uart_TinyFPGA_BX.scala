@@ -86,12 +86,9 @@ class Uart_TinyFPGA_BX extends Component {
     val TXD = out Bool
     val USBPU = out Bool
   }
-
-  /*
-   * Refer https://wolfgang-jung.net/posts/2018-07-19-spinalhdl/ and
-   * https://spinalhdl.github.io/SpinalDoc-RTD/SpinalHDL/Structuring/clock_domain.html
-   */
-  val coreClockDomain = ClockDomain(
+  /* If you like synchronous reset,
+   *
+  val boot_clock_domain = ClockDomain(
     clock = io.CLK,
     frequency = FixedFrequency(16 MHz),
     config = ClockDomainConfig(
@@ -99,7 +96,23 @@ class Uart_TinyFPGA_BX extends Component {
     )
   )
 
-  val coreArea = new ClockingArea(coreClockDomain) {
+  val boot_area = new ClockingArea(boot_clock_domain) {
+    val ct = Counter(16)
+    val delayed_reset = ct.willOverflow
+    ct.increment()
+  }
+   */
+
+  val core_clock_domain = ClockDomain(
+    clock = io.CLK,
+    frequency = FixedFrequency(16 MHz),
+    // reset = boot_area.delayed_reset, // if you like synchronous reset
+    config = ClockDomainConfig(
+      resetKind = BOOT // change also here...
+    )
+  )
+
+  val core_area = new ClockingArea(core_clock_domain) {
     io.USBPU := False
 
     val uart_tx_str = new UartTxString(
