@@ -81,7 +81,10 @@ class UartTxString(
         uart.io.payload := rom_str.readSync(n_char_sent)
         when(uart.io.ready) {
           n_char_sent := n_char_sent + 1
-          when(n_char_sent === str.length) {
+          when(n_char_sent === str.length - 1) {
+            uart.io.valid := False
+            uart.io.payload := 0
+            n_char_sent := 0
             goto(waiting)
           }
         }
