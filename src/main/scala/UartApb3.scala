@@ -40,7 +40,6 @@ class UartApb3(
   val write: Bool = io.PSEL && io.PENABLE && io.PWRITE
   val read: Bool = io.PSEL && io.PENABLE && !io.PWRITE
 
-
   /*
    * Main Part
    */

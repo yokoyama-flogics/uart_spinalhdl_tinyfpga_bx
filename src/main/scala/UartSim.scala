@@ -82,11 +82,12 @@ object UartApb3Sim {
         } else if (idx == 12) {
           dut.io.PSEL #= false
           dut.io.PENABLE #= false
+        }
 
         /*
          * Reading from UartApb3 status register (expecting to read 0)
          */
-        } else if (idx == 20) {
+        if (idx == 20) {
           dut.io.PADDR #= 0x20000004
           dut.io.PSEL #= true
           dut.io.PWRITE #= false
@@ -95,11 +96,12 @@ object UartApb3Sim {
         } else if (idx == 22) {
           dut.io.PSEL #= false
           dut.io.PENABLE #= false
+        }
 
         /*
          * Reading from UartApb3 status register (expecting to read 1)
          */
-        } else if (idx == 1620) {
+        if (idx == 1620) {
           dut.io.PADDR #= 0x20000004
           dut.io.PSEL #= true
           dut.io.PWRITE #= false
@@ -109,6 +111,7 @@ object UartApb3Sim {
           dut.io.PSEL #= false
           dut.io.PENABLE #= false
         }
+
         dut.clockDomain.waitSampling()
       }
     }
