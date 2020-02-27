@@ -11,6 +11,7 @@ on my work blog.
 - [Part 1: How Software Programmers Design a UART](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part1/)
 - [Part 2: Improving the UART (Elaborating Design and Adding String Transmission)](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part2/)
 - [Part 3: Adding APB3 Bus to the UART](https://flogics.com/wp/ja/2020/02/spinalhdl-uart-part3/)
+- [Also Designed UART Rx](https://flogics.com/wp/ja/2020/02/spinalhdl-uart-rx/)
 
 ## Required Hardware
 
