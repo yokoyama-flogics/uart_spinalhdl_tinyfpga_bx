@@ -27,7 +27,7 @@ class UartApb3(
   /*
    * Instantiation of a UART Core
    */
-  val uart = new UartCore(
+  val uart = new UartTxCore(
     len_data = 8,
     clock_rate = clock_rate,
     bit_rate = bit_rate
