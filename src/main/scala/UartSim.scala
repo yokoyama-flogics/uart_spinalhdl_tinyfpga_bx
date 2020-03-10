@@ -35,7 +35,7 @@ object UartTxStringSim {
   def main(args: Array[String]): Unit = {
     SimConfig.withWave.doSim(
       new UartTxString(
-        str = "Hello World! ",
+        str = "He", // "Hello World! ",
         clock_rate = 16 MHz,
         bit_rate = 115200 Hz
       )

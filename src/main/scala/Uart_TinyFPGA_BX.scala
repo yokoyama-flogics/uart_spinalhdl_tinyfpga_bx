@@ -37,7 +37,7 @@ class UartTxString(
   uart.io.txd <> io.txd
 
   uart.io.valid := False
-  uart.io.payload := 0
+  uart.io.payload := rom_str.readAsync(n_char_sent)
 
   val fsm = new StateMachine {
     var waiting: State = null
@@ -68,7 +68,6 @@ class UartTxString(
     waiting
       .whenIsActive {
         uart.io.valid := False
-        uart.io.payload := 0
         ct_waiting.increment()
         when(ct_waiting.willOverflow) {
           goto(active)
@@ -78,12 +77,10 @@ class UartTxString(
     active
       .whenIsActive {
         uart.io.valid := True
-        uart.io.payload := rom_str.readSync(n_char_sent)
         when(uart.io.ready) {
           n_char_sent := n_char_sent + 1
           when(n_char_sent === str.length - 1) {
-            uart.io.valid := False
-            uart.io.payload := 0
+            // XXX uart.io.valid := False (this causes combinational loop)
             n_char_sent := 0
             goto(waiting)
           }
