@@ -46,10 +46,9 @@ class UartTxCore(
 
     idle
       .whenIsActive {
-        io.ready := True
+        io.ready := False
         io.txd := True
         when(io.valid) {
-          io.ready := False
           n_bits_sent := 0
           ct_timer := 0
           data := io.payload
