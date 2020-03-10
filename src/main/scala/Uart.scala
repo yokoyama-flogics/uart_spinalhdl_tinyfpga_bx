@@ -49,6 +49,7 @@ class UartTxCore(
         io.ready := True
         io.txd := True
         when(io.valid) {
+          io.ready := False
           n_bits_sent := 0
           ct_timer := 0
           data := io.payload
@@ -84,6 +85,7 @@ class UartTxCore(
         io.ready := False
         io.txd := True
         when(ct_full) {
+          io.ready := True
           goto(idle)
         }
       }
