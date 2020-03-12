@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Jan 30 09:52:59 2020
+[*]
+[dumpfile] "/Users/yokoyama/Dropbox/monthly/202001/fpga/spinalhdl/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartTxString/test.vcd"
+[dumpfile_mtime] "Thu Jan 30 09:47:59 2020"
+[dumpfile_size] 3561241
+[savefile] "/Users/yokoyama/Dropbox/monthly/202001/fpga/spinalhdl/uart_spinalhdl_tinyfpga_bx/yokoyama_txstring.gtkw"
+[timestart] 166800
+[size] 1831 600
+[pos] -1 -1
+*-6.100253 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.UartTxString.
+[sst_width] 193
+[signals_width] 245
+[sst_expanded] 1
+[sst_vpaned_height] 157
+@28
+TOP.clk
+@820
+TOP.UartTxString.uart.io_payload[7:0]
+@821
+TOP.UartTxString.fsm_stateReg_string[87:0]
+@24
+TOP.UartTxString.n_char_sent[3:0]
+@28
+TOP.UartTxString.uart_io_ready
+TOP.UartTxString.uart.io_valid
+@24
+TOP.UartTxString.uart.n_bits_sent[2:0]
+@820
+TOP.UartTxString.uart.fsm_stateReg_string[95:0]
+@28
+TOP.io_txd
+[pattern_trace] 1
+[pattern_trace] 0

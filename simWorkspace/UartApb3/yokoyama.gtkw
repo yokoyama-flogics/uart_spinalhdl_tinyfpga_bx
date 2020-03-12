@@ -1,0 +1,45 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Jan 31 06:54:33 2020
+[*]
+[dumpfile] "/Users/yokoyama/Dropbox/monthly/202001/fpga/spinalhdl/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartApb3/test.vcd"
+[dumpfile_mtime] "Fri Jan 31 05:50:22 2020"
+[dumpfile_size] 161651
+[savefile] "/Users/yokoyama/Dropbox/monthly/202001/fpga/spinalhdl/uart_spinalhdl_tinyfpga_bx/yokoyama_apb3.gtkw"
+[timestart] 0
+[size] 2070 600
+[pos] -276 16
+*-12.632713 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.UartApb3.
+[sst_width] 193
+[signals_width] 245
+[sst_expanded] 1
+[sst_vpaned_height] 167
+@28
+TOP.clk
+@22
+TOP.io_PADDR[31:0]
+@28
+TOP.io_PSEL
+TOP.io_PENABLE
+TOP.io_PREADY
+TOP.io_PWRITE
+@22
+TOP.io_PWDATA[31:0]
+TOP.io_PRDATA[31:0]
+@28
+TOP.io_PSLVERROR
+TOP.UartApb3.uart.io_valid
+@22
+TOP.UartApb3.uart.io_payload[7:0]
+@28
+TOP.UartApb3.uart.io_ready
+@821
+TOP.UartApb3.uart.fsm_stateReg_string[95:0]
+@24
+TOP.UartApb3.uart.n_bits_sent[2:0]
+@28
+TOP.UartApb3.uart.io_txd
+[pattern_trace] 1
+[pattern_trace] 0
