@@ -101,7 +101,7 @@ class UartRxCore(
 ) extends Component {
   val io = new Bundle {
     val valid = out Bool
-    val ready = in Bool
+    // val ready = in Bool // UART Rx has no hand-shake, so ready doesn't help
     val payload = out Bits (len_data bits)
     val rxd = in Bool
   }
@@ -134,6 +134,7 @@ class UartRxCore(
     val idle = new State with EntryPoint
     val startbit = new State
     val receiving = new State
+    val rx_valid = new State
     val stopbit = new State
 
     idle
@@ -159,16 +160,21 @@ class UartRxCore(
           data := (data |>> 1) | (io.rxd.asBits << (len_data - 1))
           n_bits_received := n_bits_received + 1
           when(n_bits_received === len_data - 1) {
-            goto(stopbit)
+            goto(rx_valid)
           }
         }
       }
 
-    stopbit
+    rx_valid
       .whenIsActive {
         io.valid := True
         io.payload := data
-        when(io.ready) {
+        goto(stopbit)
+      }
+
+    stopbit
+      .whenIsActive {
+        when(ct_full) {
           goto(idle)
         }
       }

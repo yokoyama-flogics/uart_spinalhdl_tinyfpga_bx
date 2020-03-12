@@ -46,11 +46,13 @@ object UartRxCoreSim {
       dut.clockDomain.forkStimulus(period = 10)
 
       val PRD = 139
+      var ready_55 = false
+      var ready_aa = false
+      var ready_5a = false
 
-      dut.io.ready #= false
       dut.io.rxd #= true
 
-      for (idx <- 0 to 5000) {
+      for (idx <- 0 to 6000) {
         if (idx == 10) {
           dut.io.rxd #= false
         }
@@ -77,17 +79,21 @@ object UartRxCoreSim {
         }
         if (idx == 10 + PRD * 8) {
           dut.io.rxd #= false
+          ready_55 = true
         }
         if (idx == 10 + PRD * 9) {
           dut.io.rxd #= true
         }
-        if (idx == 10 + PRD * 12) {
-          dut.io.ready #= true
+
+        if (ready_55 == true && dut.io.valid.toBoolean) {
+          ready_55 = false
+          assert(
+            dut.io.payload.toLong == 0x55,
+            message = "idx = " + idx.toString
+              + ", PRDATA = 0x" + dut.io.payload.toLong.toHexString
+          )
         }
 
-        if (idx == 2400) {
-          dut.io.ready #= false
-        }
         if (idx == 2510) {
           dut.io.rxd #= false
         }
@@ -114,13 +120,62 @@ object UartRxCoreSim {
         }
         if (idx == 2510 + PRD * 8) {
           dut.io.rxd #= true
+          ready_aa = true
         }
         if (idx == 2510 + PRD * 9) {
           dut.io.rxd #= true
         }
-        if (idx == 2510 + PRD * 12) {
-          dut.io.ready #= true
+
+        if (ready_aa == true && dut.io.valid.toBoolean) {
+          ready_aa = false
+          assert(
+            dut.io.payload.toLong == 0xaa,
+            message = "idx = " + idx.toString
+              + ", PRDATA = 0x" + dut.io.payload.toLong.toHexString
+          )
         }
+
+        if (idx == 2510 + PRD * 10) {
+          dut.io.rxd #= false
+        }
+        if (idx == 2510 + PRD * 11) {
+          dut.io.rxd #= false
+        }
+        if (idx == 2510 + PRD * 12) {
+          dut.io.rxd #= true
+        }
+        if (idx == 2510 + PRD * 13) {
+          dut.io.rxd #= false
+        }
+        if (idx == 2510 + PRD * 14) {
+          dut.io.rxd #= true
+        }
+        if (idx == 2510 + PRD * 15) {
+          dut.io.rxd #= true
+        }
+        if (idx == 2510 + PRD * 16) {
+          dut.io.rxd #= false
+        }
+        if (idx == 2510 + PRD * 17) {
+          dut.io.rxd #= true
+        }
+        if (idx == 2510 + PRD * 18) {
+          dut.io.rxd #= false
+          ready_5a = true
+        }
+        if (idx == 2510 + PRD * 19) {
+          dut.io.rxd #= true
+        }
+
+        if (ready_5a == true && dut.io.valid.toBoolean) {
+          ready_5a = false
+          assert(
+            dut.io.payload.toLong == 0x5a,
+            message = "idx = " + idx.toString
+              + ", PRDATA = 0x" + dut.io.payload.toLong.toHexString
+          )
+        }
+
         dut.clockDomain.waitSampling()
       }
     }

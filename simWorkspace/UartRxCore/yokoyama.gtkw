@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Mar 12 00:23:59 2020
+[*] Thu Mar 12 04:24:49 2020
 [*]
 [dumpfile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartRxCore/test.vcd"
-[dumpfile_mtime] "Thu Mar 12 00:19:00 2020"
-[dumpfile_size] 161973
+[dumpfile_mtime] "Thu Mar 12 04:17:27 2020"
+[dumpfile_size] 195804
 [savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartRxCore/yokoyama.gtkw"
-[timestart] 16761
-[size] 2045 600
+[timestart] 0
+[size] 1920 851
 [pos] -1 -1
-*-5.267767 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.050995 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [sst_width] 193
 [signals_width] 253
@@ -21,7 +21,6 @@ TOP.io_valid
 @22
 TOP.io_payload[7:0]
 @28
-TOP.io_ready
 TOP.io_rxd
 TOP.UartRxCore.ct_full
 TOP.UartRxCore.ct_mid
@@ -31,7 +30,7 @@ TOP.UartRxCore.ct_timer[7:0]
 TOP.UartRxCore.data[7:0]
 @820
 TOP.UartRxCore.fsm_stateReg_string[103:0]
-@25
+@24
 TOP.UartRxCore.n_bits_received[2:0]
 [pattern_trace] 1
 [pattern_trace] 0
