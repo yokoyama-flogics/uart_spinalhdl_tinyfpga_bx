@@ -219,6 +219,11 @@ object UartApb3Sim {
       dut.io.PWRITE #= false
       dut.io.PWDATA #= 0
 
+      dut.io.rxd #= true
+
+      val PRD = 139
+      val RX_START = 1700
+
       for (idx <- 0 to 5000) {
         /*
          * Writing to UartApb3 TxD register
@@ -239,12 +244,17 @@ object UartApb3Sim {
          * Reading from UartApb3 status register (expecting to read 0)
          */
         if (idx == 20) {
-          dut.io.PADDR #= 0x20000004
+          dut.io.PADDR #= 0x20000008
           dut.io.PSEL #= true
           dut.io.PWRITE #= false
         } else if (idx == 21) {
           dut.io.PENABLE #= true
         } else if (idx == 22) {
+          assert(
+            dut.io.PRDATA.toBigInt == 0,
+            message = "idx = " + idx.toString
+              + ", PRDATA = " + dut.io.PRDATA.toBigInt.toString
+          )
           dut.io.PSEL #= false
           dut.io.PENABLE #= false
         }
@@ -253,12 +263,64 @@ object UartApb3Sim {
          * Reading from UartApb3 status register (expecting to read 1)
          */
         if (idx == 1620) {
-          dut.io.PADDR #= 0x20000004
+          dut.io.PADDR #= 0x20000008
           dut.io.PSEL #= true
           dut.io.PWRITE #= false
         } else if (idx == 1621) {
           dut.io.PENABLE #= true
         } else if (idx == 1622) {
+          assert(
+            dut.io.PRDATA.toBigInt == 1,
+            message = ("idx = " + idx.toString
+              + ", PRDATA = " + dut.io.PRDATA.toBigInt.toString)
+          )
+          dut.io.PSEL #= false
+          dut.io.PENABLE #= false
+        }
+
+        if (idx == RX_START) {
+          dut.io.rxd #= false
+        }
+        if (idx == RX_START + PRD) {
+          dut.io.rxd #= true
+        }
+        if (idx == RX_START + PRD * 2) {
+          dut.io.rxd #= false
+        }
+        if (idx == RX_START + PRD * 3) {
+          dut.io.rxd #= true
+        }
+        if (idx == RX_START + PRD * 4) {
+          dut.io.rxd #= false
+        }
+        if (idx == RX_START + PRD * 5) {
+          dut.io.rxd #= true
+        }
+        if (idx == RX_START + PRD * 6) {
+          dut.io.rxd #= false
+        }
+        if (idx == RX_START + PRD * 7) {
+          dut.io.rxd #= true
+        }
+        if (idx == RX_START + PRD * 8) {
+          dut.io.rxd #= false
+        }
+        if (idx == RX_START + PRD * 9) {
+          dut.io.rxd #= true
+        }
+
+        if (idx == RX_START + PRD * 12) {
+          dut.io.PADDR #= 0x20000004
+          dut.io.PSEL #= true
+          dut.io.PWRITE #= false
+        } else if (idx == RX_START + PRD * 12 + 1) {
+          dut.io.PENABLE #= true
+        } else if (idx == RX_START + PRD * 12 + 2) {
+          assert(
+            dut.io.PRDATA.toLong == 0x55,
+            message = ("idx = " + idx.toString
+              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
+          )
           dut.io.PSEL #= false
           dut.io.PENABLE #= false
         }
