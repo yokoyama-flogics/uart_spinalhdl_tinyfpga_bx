@@ -156,7 +156,6 @@ class UartRxCore(
           data := (data |>> 1) | (io.rxd.asBits << (len_data - 1))
           n_bits_received := n_bits_received + 1
           when(n_bits_received === len_data - 1) {
-            n_bits_received := 0
             goto(stopbit)
           }
         }
@@ -173,10 +172,22 @@ class UartRxCore(
   }
 }
 
-object UartCoreVerilog {
+object UartTxCoreVerilog {
   def main(args: Array[String]): Unit = {
     SpinalVerilog(
       new UartTxCore(
+        len_data = 8,
+        clock_rate = 16 MHz,
+        bit_rate = 115200 Hz
+      )
+    )
+  }
+}
+
+object UartRxCoreVerilog {
+  def main(args: Array[String]): Unit = {
+    SpinalVerilog(
+      new UartRxCore(
         len_data = 8,
         clock_rate = 16 MHz,
         bit_rate = 115200 Hz
