@@ -21,10 +21,12 @@ object UartTxCoreSim {
         if (idx == 10) {
           dut.io.payload #= 123
           dut.io.valid #= true
-        } else if (idx == 15) {
-          dut.io.payload #= 0
+        }
+
+        if (dut.io.ready.toBoolean) {
           dut.io.valid #= false
         }
+
         dut.clockDomain.waitSampling()
       }
     }

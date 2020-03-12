@@ -10,6 +10,7 @@ class UartTxCore(
     val valid = in Bool
     val ready = out Bool
     val payload = in Bits (len_data bits)
+    val tx_ready = out Bool
     val txd = out Bool
   }
 
@@ -36,6 +37,7 @@ class UartTxCore(
   }
 
   io.ready := False
+  io.tx_ready := False
   io.txd := True
 
   val fsm = new StateMachine {
@@ -47,6 +49,7 @@ class UartTxCore(
     idle
       .whenIsActive {
         io.ready := False
+        io.tx_ready := True
         io.txd := True
         when(io.valid) {
           n_bits_sent := 0
