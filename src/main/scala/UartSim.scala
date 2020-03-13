@@ -210,155 +210,110 @@ object UartApb3Sim {
         bit_rate = 115200 Hz
       )
     ) { dut =>
-      //Fork a process to generate the reset and the clock on the dut
+      def wait(count: Int = 1) {
+        dut.clockDomain.waitSampling(count)
+      }
+
+      def my_assert(f: Boolean, msg: String): Unit = {
+        assert(
+          assertion = f,
+          message = msg
+        )
+      }
+
+      def write(addr: BigInt, data: BigInt): Unit = {
+        dut.io.PADDR #= addr
+        dut.io.PSEL #= true
+        dut.io.PENABLE #= false
+        dut.io.PWRITE #= true
+        dut.io.PWDATA #= data
+
+        wait()
+        dut.io.PENABLE #= true
+
+        wait()
+        dut.io.PSEL #= false
+        dut.io.PENABLE #= false
+      }
+
+      def read_assert(addr: BigInt, expecting: BigInt, msg: String): Unit = {
+        dut.io.PADDR #= addr
+        dut.io.PSEL #= true
+        dut.io.PENABLE #= false
+        dut.io.PWRITE #= false
+
+        wait()
+        dut.io.PENABLE #= true
+
+        wait()
+        my_assert(
+          dut.io.PRDATA.toBigInt == expecting,
+          msg + " expected PRDATA = " + expecting.toString
+            + ", actual PRDATA = " + dut.io.PRDATA.toBigInt.toString
+        )
+
+        dut.io.PSEL #= false
+        dut.io.PENABLE #= false
+      }
+
       dut.clockDomain.forkStimulus(period = 10)
 
+      val PRD = 139 // bit rate period cycles
+      val REG_WRITE = 0x20000000
+      val REG_READ = 0x20000004
+      val REG_STATUS = 0x20000008
+
+      /*
+       * Initialize inputs
+       */
       dut.io.PADDR #= 0
       dut.io.PSEL #= false
       dut.io.PENABLE #= false
       dut.io.PWRITE #= false
       dut.io.PWDATA #= 0
-
       dut.io.rxd #= true
 
-      val PRD = 139
-      val RX_START = 1700
+      wait(2)
+      write(REG_WRITE, 0x5a)
 
-      for (idx <- 0 to 5000) {
-        /*
-         * Writing to UartApb3 TxD register
-         */
-        if (idx == 10) {
-          dut.io.PADDR #= 0x20000000
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= true
-          dut.io.PWDATA #= 0x5a
-        } else if (idx == 11) {
-          dut.io.PENABLE #= true
-        } else if (idx == 12) {
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
+      wait(10)
+      read_assert(REG_STATUS, expecting = 0, "[xmitting]")
 
-        /*
-         * Reading from UartApb3 status register (expecting to read 0)
-         */
-        if (idx == 20) {
-          dut.io.PADDR #= 0x20000008
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= false
-        } else if (idx == 21) {
-          dut.io.PENABLE #= true
-        } else if (idx == 22) {
-          assert(
-            dut.io.PRDATA.toBigInt == 0,
-            message = "idx = " + idx.toString
-              + ", PRDATA = " + dut.io.PRDATA.toBigInt.toString
-          )
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
+      wait(PRD * 11)
+      read_assert(REG_STATUS, expecting = 1, "[xmit done]")
 
-        /*
-         * Reading from UartApb3 status register (expecting to read 1)
-         */
-        if (idx == 1620) {
-          dut.io.PADDR #= 0x20000008
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= false
-        } else if (idx == 1621) {
-          dut.io.PENABLE #= true
-        } else if (idx == 1622) {
-          assert(
-            dut.io.PRDATA.toBigInt == 1,
-            message = ("idx = " + idx.toString
-              + ", PRDATA = " + dut.io.PRDATA.toBigInt.toString)
-          )
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
+      /*
+       * Transmitting a character
+       */
+      wait()
+      dut.io.rxd #= false // start-bit
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true // stop-bit
 
-        if (idx == RX_START) {
-          dut.io.rxd #= false
-        }
-        if (idx == RX_START + PRD) {
-          dut.io.rxd #= true
-        }
-        if (idx == RX_START + PRD * 2) {
-          dut.io.rxd #= false
-        }
-        if (idx == RX_START + PRD * 3) {
-          dut.io.rxd #= true
-        }
-        if (idx == RX_START + PRD * 4) {
-          dut.io.rxd #= false
-        }
-        if (idx == RX_START + PRD * 5) {
-          dut.io.rxd #= true
-        }
-        if (idx == RX_START + PRD * 6) {
-          dut.io.rxd #= false
-        }
-        if (idx == RX_START + PRD * 7) {
-          dut.io.rxd #= true
-        }
-        if (idx == RX_START + PRD * 8) {
-          dut.io.rxd #= false
-        }
-        if (idx == RX_START + PRD * 9) {
-          dut.io.rxd #= true
-        }
+      wait(5)
+      read_assert(REG_STATUS, expecting = 3, "[recv done]")
 
-        if (idx == RX_START + PRD * 12) {
-          dut.io.PADDR #= 0x20000008
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= false
-        } else if (idx == RX_START + PRD * 12 + 1) {
-          dut.io.PENABLE #= true
-        } else if (idx == RX_START + PRD * 12 + 2) {
-          assert(
-            dut.io.PRDATA.toLong == 0x3,
-            message = ("idx = " + idx.toString
-              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
-          )
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
+      wait(5)
+      read_assert(REG_READ, expecting = 0x55, "[recv data]")
 
-        if (idx == RX_START + PRD * 14) {
-          dut.io.PADDR #= 0x20000004
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= false
-        } else if (idx == RX_START + PRD * 14 + 1) {
-          dut.io.PENABLE #= true
-        } else if (idx == RX_START + PRD * 14 + 2) {
-          assert(
-            dut.io.PRDATA.toLong == 0x55,
-            message = ("idx = " + idx.toString
-              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
-          )
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
-
-        if (idx == RX_START + PRD * 15) {
-          dut.io.PADDR #= 0x20000008
-          dut.io.PSEL #= true
-          dut.io.PWRITE #= false
-        } else if (idx == RX_START + PRD * 15 + 1) {
-          dut.io.PENABLE #= true
-        } else if (idx == RX_START + PRD * 15 + 2) {
-          assert(
-            dut.io.PRDATA.toLong == 0x1,
-            message = ("idx = " + idx.toString
-              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
-          )
-          dut.io.PSEL #= false
-          dut.io.PENABLE #= false
-        }
-
-        dut.clockDomain.waitSampling()
-      }
+      wait(5)
+      read_assert(REG_STATUS, expecting = 1, "[read buf empty]")
     }
   }
 }
