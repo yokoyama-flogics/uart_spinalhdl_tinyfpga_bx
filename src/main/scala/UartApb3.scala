@@ -24,9 +24,10 @@ class UartApb3(
   val addr_base = 0x20000000
   val addr_txd = addr_base + 0
   val addr_rxd = addr_base + 4
-  val addr_status = addr_base + 8 // bit 0: tx_ready
+  val addr_status = addr_base + 8 // bit 1: rx_ready, 0: tx_ready
 
   val rx_data = Reg(Bits(len_data bits)) init (0)
+  val rx_ready = Reg(Bool) init (False)
 
   /*
    * Instantiation of a UART Cores
@@ -63,6 +64,7 @@ class UartApb3(
 
   when(uart_rx.io.valid) {
     rx_data := uart_rx.io.payload
+    rx_ready := True
   }
 
   when(io.PADDR === addr_txd && write) {
@@ -72,8 +74,13 @@ class UartApb3(
   }.elsewhen(io.PADDR === addr_rxd && read) {
     io.PREADY := True
     io.PRDATA := rx_data.resized
+    rx_ready := False
   }.elsewhen(io.PADDR === addr_status && read) {
     io.PREADY := True
-    io.PRDATA := uart_tx.io.tx_ready.asBits(1 bits).resized
+    io.PRDATA := (
+      1 -> rx_ready,
+      0 -> uart_tx.io.tx_ready,
+      default -> False
+    )
   }
 }

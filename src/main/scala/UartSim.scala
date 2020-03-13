@@ -310,14 +310,46 @@ object UartApb3Sim {
         }
 
         if (idx == RX_START + PRD * 12) {
-          dut.io.PADDR #= 0x20000004
+          dut.io.PADDR #= 0x20000008
           dut.io.PSEL #= true
           dut.io.PWRITE #= false
         } else if (idx == RX_START + PRD * 12 + 1) {
           dut.io.PENABLE #= true
         } else if (idx == RX_START + PRD * 12 + 2) {
           assert(
+            dut.io.PRDATA.toLong == 0x3,
+            message = ("idx = " + idx.toString
+              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
+          )
+          dut.io.PSEL #= false
+          dut.io.PENABLE #= false
+        }
+
+        if (idx == RX_START + PRD * 14) {
+          dut.io.PADDR #= 0x20000004
+          dut.io.PSEL #= true
+          dut.io.PWRITE #= false
+        } else if (idx == RX_START + PRD * 14 + 1) {
+          dut.io.PENABLE #= true
+        } else if (idx == RX_START + PRD * 14 + 2) {
+          assert(
             dut.io.PRDATA.toLong == 0x55,
+            message = ("idx = " + idx.toString
+              + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
+          )
+          dut.io.PSEL #= false
+          dut.io.PENABLE #= false
+        }
+
+        if (idx == RX_START + PRD * 15) {
+          dut.io.PADDR #= 0x20000008
+          dut.io.PSEL #= true
+          dut.io.PWRITE #= false
+        } else if (idx == RX_START + PRD * 15 + 1) {
+          dut.io.PENABLE #= true
+        } else if (idx == RX_START + PRD * 15 + 2) {
+          assert(
+            dut.io.PRDATA.toLong == 0x1,
             message = ("idx = " + idx.toString
               + ", PRDATA = " + dut.io.PRDATA.toLong.toHexString)
           )
