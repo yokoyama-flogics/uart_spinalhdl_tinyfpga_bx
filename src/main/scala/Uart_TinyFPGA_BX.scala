@@ -89,9 +89,141 @@ class UartTxString(
   }
 }
 
+class UartToUpper(
+    clock_rate: HertzNumber,
+    bit_rate: HertzNumber
+) extends Component {
+  val io = new Bundle {
+    val rxd = in Bool
+    val txd = out Bool
+  }
+
+  val chr_size = 8 // bits
+  val REG_WRITE = 0x20000000
+  val REG_READ = 0x20000004
+  val REG_STATUS = 0x20000008
+
+  val data = Reg(Bits(chr_size bits)) init (0)
+
+  val uart = new UartApb3(
+    len_data = chr_size,
+    clock_rate = clock_rate,
+    bit_rate = bit_rate
+  )
+  uart.io.txd <> io.txd
+  uart.io.rxd <> io.rxd
+
+  uart.io.PADDR := 0
+  uart.io.PSEL := False
+  uart.io.PENABLE := False
+  uart.io.PWRITE := False
+  uart.io.PWDATA := 0
+
+  val fsm = new StateMachine {
+    var s0 = new State with EntryPoint
+    var s1 = new State
+    var s1a = new State
+    var s1b = new State
+    var s2 = new State
+    var s3 = new State
+    var s4 = new State
+    var s5 = new State
+
+    s0
+      .whenIsActive {
+        uart.io.PADDR := REG_STATUS
+        uart.io.PSEL := True
+        uart.io.PENABLE := False
+        uart.io.PWRITE := False
+        goto(s1)
+      }
+
+    s1
+      .whenIsActive {
+        uart.io.PADDR := REG_STATUS
+        uart.io.PSEL := True
+        uart.io.PENABLE := True
+        uart.io.PWRITE := False
+        when(uart.io.PRDATA(1)) {
+          goto(s1a)
+        } otherwise {
+          goto(s0)
+        }
+      }
+
+    s1a
+      .whenIsActive {
+        uart.io.PADDR := REG_READ
+        uart.io.PSEL := True
+        uart.io.PENABLE := False
+        uart.io.PWRITE := False
+        goto(s1b)
+      }
+
+    s1b
+      .whenIsActive {
+        uart.io.PADDR := REG_READ
+        uart.io.PSEL := True
+        uart.io.PENABLE := True
+        uart.io.PWRITE := False
+
+        var v: UInt = uart.io.PRDATA.resize(chr_size).asUInt
+        when(v >= 0x61 && v <= 0x7a) {
+          data := (v - 0x20).asBits
+        } otherwise {
+          data := v.asBits
+        }
+        goto(s2)
+      }
+
+    s2
+      .whenIsActive {
+        uart.io.PADDR := REG_WRITE
+        uart.io.PSEL := True
+        uart.io.PENABLE := False
+        uart.io.PWRITE := True
+        uart.io.PWDATA := data.resized
+        goto(s3)
+      }
+
+    s3
+      .whenIsActive {
+        uart.io.PADDR := REG_WRITE
+        uart.io.PSEL := True
+        uart.io.PENABLE := True
+        uart.io.PWRITE := True
+        uart.io.PWDATA := data.resized
+        goto(s4)
+      }
+
+    s4
+      .whenIsActive {
+        uart.io.PADDR := REG_STATUS
+        uart.io.PSEL := True
+        uart.io.PENABLE := False
+        uart.io.PWRITE := False
+        goto(s5)
+      }
+
+    s5
+      .whenIsActive {
+        uart.io.PADDR := REG_STATUS
+        uart.io.PSEL := True
+        uart.io.PENABLE := True
+        uart.io.PWRITE := False
+        when(uart.io.PRDATA(0)) {
+          goto(s0)
+        } otherwise {
+          goto(s4)
+        }
+      }
+  }
+}
+
 class Uart_TinyFPGA_BX extends Component {
   val io = new Bundle {
     val CLK = in Bool
+    val RXD = in Bool
     val TXD = out Bool
     val USBPU = out Bool
   }
@@ -124,6 +256,7 @@ class Uart_TinyFPGA_BX extends Component {
   val core_area = new ClockingArea(core_clock_domain) {
     io.USBPU := False
 
+/*
     val uart_tx_str = new UartTxString(
       str = "Hello World! ",
       clock_rate = ClockDomain.current.frequency.getValue,
@@ -131,6 +264,14 @@ class Uart_TinyFPGA_BX extends Component {
       delayed_start = true
     )
     uart_tx_str.io.txd <> io.TXD
+*/
+
+    val uart_to_upper = new UartToUpper(
+      clock_rate = ClockDomain.current.frequency.getValue,
+      bit_rate = 115200 Hz
+    )
+    uart_to_upper.io.txd <> io.TXD
+    uart_to_upper.io.rxd <> io.RXD
   }
 }
 

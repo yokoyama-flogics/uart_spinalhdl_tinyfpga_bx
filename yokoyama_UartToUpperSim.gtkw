@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Mar 13 05:28:36 2020
+[*]
+[dumpfile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartToUpper/test.vcd"
+[dumpfile_mtime] "Fri Mar 13 05:06:59 2020"
+[dumpfile_size] 1409274
+[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/yokoyama_UartToUpperSim.gtkw"
+[timestart] 45311
+[size] 1873 600
+[pos] -1 -1
+*-4.628031 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.UartToUpper.
+[treeopen] TOP.UartToUpper.uart.
+[sst_width] 193
+[signals_width] 253
+[sst_expanded] 1
+[sst_vpaned_height] 167
+@28
+TOP.clk
+TOP.io_rxd
+TOP.io_txd
+@22
+TOP.UartToUpper.uart.io_PADDR[31:0]
+@28
+TOP.UartToUpper.uart.io_PSEL
+TOP.UartToUpper.uart.io_PENABLE
+TOP.UartToUpper.uart.io_PWRITE
+@22
+TOP.UartToUpper.uart.io_PWDATA[31:0]
+TOP.UartToUpper.uart.io_PRDATA[31:0]
+@28
+TOP.UartToUpper.uart.rx_ready
+@821
+TOP.UartToUpper.fsm_stateReg_string[55:0]
+@200
+-
+@820
+TOP.UartToUpper.uart.uart_rx.fsm_stateReg_string[103:0]
+@200
+-
+@820
+TOP.UartToUpper.uart.uart_tx.fsm_stateReg_string[95:0]
+@24
+TOP.UartToUpper.uart.uart_tx.n_bits_sent[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

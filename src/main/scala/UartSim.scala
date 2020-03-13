@@ -317,3 +317,84 @@ object UartApb3Sim {
     }
   }
 }
+
+object UartToUpperSim {
+  def main(args: Array[String]): Unit = {
+    SimConfig.withWave.doSim(
+      new UartToUpper(
+        clock_rate = 16 MHz,
+        bit_rate = 115200 Hz
+      )
+    ) { dut =>
+      def wait(count: Int = 1) {
+        dut.clockDomain.waitSampling(count)
+      }
+
+      def my_assert(f: Boolean, msg: String): Unit = {
+        assert(
+          assertion = f,
+          message = msg
+        )
+      }
+
+      dut.clockDomain.forkStimulus(period = 10)
+
+      val PRD = 139 // bit rate period cycles
+
+      /*
+       * Initialize inputs
+       */
+      dut.io.rxd #= true
+
+      /*
+       * Transmitting a character
+       */
+      wait(2)
+      dut.io.rxd #= false // start-bit
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true // stop-bit
+
+      /*
+       * Transmitting a character
+       */
+      wait(PRD * 15)
+      dut.io.rxd #= false // start-bit
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true // stop-bit
+
+      wait(PRD * 15)
+    }
+  }
+}
