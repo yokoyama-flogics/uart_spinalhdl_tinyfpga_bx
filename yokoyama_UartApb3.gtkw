@@ -1,11 +1,11 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Mar 12 23:55:33 2020
+[*] Fri Mar 13 00:07:41 2020
 [*]
 [dumpfile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartApb3/test.vcd"
-[dumpfile_mtime] "Thu Mar 12 23:54:36 2020"
-[dumpfile_size] 152893
-[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartApb3/yokoyama.gtkw"
+[dumpfile_mtime] "Fri Mar 13 00:00:22 2020"
+[dumpfile_size] 225169
+[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/yokoyama_UartApb3.gtkw"
 [timestart] 0
 [size] 1920 1155
 [pos] -1 -1
@@ -15,7 +15,7 @@
 [sst_width] 193
 [signals_width] 253
 [sst_expanded] 1
-[sst_vpaned_height] 565
+[sst_vpaned_height] 915
 @28
 TOP.clk
 TOP.io_txd
