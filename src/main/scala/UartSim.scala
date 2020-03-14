@@ -359,7 +359,7 @@ object UartToUpperSim {
       dut.io.rxd #= true // stop-bit
 
       /*
-       * Transmitting a character
+       * Transmitting a character with longer than one character space
        */
       wait(PRD * 15)
       dut.io.rxd #= false // start-bit
@@ -375,6 +375,30 @@ object UartToUpperSim {
       dut.io.rxd #= false
       wait(PRD)
       dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true // stop-bit
+
+      /*
+       * Transmitting a character without a character space
+       */
+      wait(PRD)
+      dut.io.rxd #= false // start-bit
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= true
+      wait(PRD)
+      dut.io.rxd #= false
+      wait(PRD)
+      dut.io.rxd #= false
       wait(PRD)
       dut.io.rxd #= true
       wait(PRD)
