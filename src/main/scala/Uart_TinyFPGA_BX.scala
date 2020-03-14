@@ -120,47 +120,47 @@ class UartToUpper(
   uart.io.PWDATA := 0
 
   val fsm = new StateMachine {
-    var s0 = new State with EntryPoint
-    var s1 = new State
-    var s1a = new State
-    var s1b = new State
-    var s2 = new State
-    var s3 = new State
-    var s4 = new State
-    var s5 = new State
+    var s10 = new State with EntryPoint
+    var s20 = new State
+    var s30 = new State
+    var s40 = new State
+    var s50 = new State
+    var s60 = new State
+    var s70 = new State
+    var s80 = new State
 
-    s0
+    s10 // Checking rx_ready (1)
       .whenIsActive {
         uart.io.PADDR := REG_STATUS
         uart.io.PSEL := True
         uart.io.PENABLE := False
         uart.io.PWRITE := False
-        goto(s1)
+        goto(s20)
       }
 
-    s1
+    s20 // Checking rx_ready (2)
       .whenIsActive {
         uart.io.PADDR := REG_STATUS
         uart.io.PSEL := True
         uart.io.PENABLE := True
         uart.io.PWRITE := False
         when(uart.io.PRDATA(1)) {
-          goto(s1a)
+          goto(s30) // data is ready
         } otherwise {
-          goto(s0)
+          goto(s10) // not yet
         }
       }
 
-    s1a
+    s30 // Reading received character (1)
       .whenIsActive {
         uart.io.PADDR := REG_READ
         uart.io.PSEL := True
         uart.io.PENABLE := False
         uart.io.PWRITE := False
-        goto(s1b)
+        goto(s40)
       }
 
-    s1b
+    s40 // Reading received character (2)
       .whenIsActive {
         uart.io.PADDR := REG_READ
         uart.io.PSEL := True
@@ -173,48 +173,48 @@ class UartToUpper(
         } otherwise {
           data := v.asBits
         }
-        goto(s2)
+        goto(s50)
       }
 
-    s2
+    s50 // Writing character to send (1)
       .whenIsActive {
         uart.io.PADDR := REG_WRITE
         uart.io.PSEL := True
         uart.io.PENABLE := False
         uart.io.PWRITE := True
         uart.io.PWDATA := data.resized
-        goto(s3)
+        goto(s60)
       }
 
-    s3
+    s60 // Writing character to send (2)
       .whenIsActive {
         uart.io.PADDR := REG_WRITE
         uart.io.PSEL := True
         uart.io.PENABLE := True
         uart.io.PWRITE := True
         uart.io.PWDATA := data.resized
-        goto(s4)
+        goto(s70)
       }
 
-    s4
+    s70 // Checking tx_ready (1)
       .whenIsActive {
         uart.io.PADDR := REG_STATUS
         uart.io.PSEL := True
         uart.io.PENABLE := False
         uart.io.PWRITE := False
-        goto(s5)
+        goto(s80)
       }
 
-    s5
+    s80 // Checking tx_ready (2)
       .whenIsActive {
         uart.io.PADDR := REG_STATUS
         uart.io.PSEL := True
         uart.io.PENABLE := True
         uart.io.PWRITE := False
         when(uart.io.PRDATA(0)) {
-          goto(s0)
+          goto(s10) // tx_ready
         } otherwise {
-          goto(s4)
+          goto(s70) // not yet
         }
       }
   }
