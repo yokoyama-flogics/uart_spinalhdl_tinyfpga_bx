@@ -2,6 +2,17 @@ import spinal.core._
 import spinal.sim._
 import spinal.core.sim._
 
+package object mine {
+  def my_assert(f: Boolean, msg: String): Unit = {
+    assert(
+      assertion = f,
+      message = msg
+    )
+  }
+}
+
+import mine._
+
 object UartTxCoreSim {
   def main(args: Array[String]): Unit = {
     SimConfig.withWave.doSim(
@@ -13,13 +24,6 @@ object UartTxCoreSim {
     ) { dut =>
       def wait(count: Int = 1) {
         dut.clockDomain.waitSampling(count)
-      }
-
-      def my_assert(f: Boolean, msg: String): Unit = {
-        assert(
-          assertion = f,
-          message = msg
-        )
       }
 
       def test_uart_tx(data: Int, period: Int, assertion: Boolean): Unit = {
@@ -289,13 +293,6 @@ object UartApb3Sim {
         dut.clockDomain.waitSampling(count)
       }
 
-      def my_assert(f: Boolean, msg: String): Unit = {
-        assert(
-          assertion = f,
-          message = msg
-        )
-      }
-
       def write(addr: BigInt, data: BigInt): Unit = {
         dut.io.PADDR #= addr
         dut.io.PSEL #= true
@@ -403,13 +400,6 @@ object UartToUpperSim {
     ) { dut =>
       def wait(count: Int = 1) {
         dut.clockDomain.waitSampling(count)
-      }
-
-      def my_assert(f: Boolean, msg: String): Unit = {
-        assert(
-          assertion = f,
-          message = msg
-        )
       }
 
       dut.clockDomain.forkStimulus(period = 10)
