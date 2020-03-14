@@ -11,24 +11,99 @@ object UartTxCoreSim {
         bit_rate = 115200 Hz
       )
     ) { dut =>
-      //Fork a process to generate the reset and the clock on the dut
+      def wait(count: Int = 1) {
+        dut.clockDomain.waitSampling(count)
+      }
+
+      def my_assert(f: Boolean, msg: String): Unit = {
+        assert(
+          assertion = f,
+          message = msg
+        )
+      }
+
+      def test_uart_tx(data: Int, period: Int, assertion: Boolean): Unit = {
+        // Check start-bit
+        for (i <- 0 until period) {
+          my_assert(
+            assertion && dut.io.txd.toBoolean == false,
+            "[start-bit] i = " + i.toString
+          )
+          wait()
+        }
+
+        // Check every bit in the character
+        for (bit <- 0 to 7) {
+          val bit_bool = (data & (1 << bit)) != 0
+          for (i <- 0 until period) {
+            my_assert(
+              assertion && dut.io.txd.toBoolean == bit_bool,
+              "[bit " + bit.toString + "] i = " + i.toString
+            )
+            wait()
+          }
+        }
+
+        // Check stop-bit
+        for (i <- 0 until period) {
+          my_assert(
+            assertion && dut.io.txd.toBoolean == true,
+            "[stop-bit] i = " + i.toString
+          )
+
+          if (i != period - 1)
+            wait() // doesn't wait after the last assertion
+        }
+      }
+
       dut.clockDomain.forkStimulus(period = 10)
 
+      val PRD = BigDecimal(16e6 / 115200)
+        .setScale(0, BigDecimal.RoundingMode.HALF_UP)
+        .toInt
+      val DATA = 123
+
+      // Initialize inputs
       dut.io.payload #= 0
       dut.io.valid #= false
 
-      for (idx <- 0 to 5000) {
-        if (idx == 10) {
-          dut.io.payload #= 123
-          dut.io.valid #= true
-        }
+      // Check the initial outputs
+      wait(2)
+      my_assert(
+        dut.io.tx_ready.toBoolean == true && dut.io.ready.toBoolean == false,
+        msg = "initial outputs"
+      )
 
-        if (dut.io.ready.toBoolean) {
-          dut.io.valid #= false
-        }
+      // Start transmission
+      dut.io.payload #= DATA
+      dut.io.valid #= true
 
-        dut.clockDomain.waitSampling()
-      }
+      wait(2)
+      my_assert(
+        dut.io.tx_ready.toBoolean == false && dut.io.ready.toBoolean == false,
+        msg = "tx_ready goes false"
+      )
+
+      test_uart_tx(
+        data = DATA,
+        period = PRD,
+        dut.io.tx_ready.toBoolean == false && dut.io.ready.toBoolean == false
+      )
+
+      my_assert(
+        dut.io.tx_ready.toBoolean == false && dut.io.ready.toBoolean == true,
+        msg = "io.ready"
+      )
+
+      dut.io.valid #= false
+
+      wait()
+      my_assert(
+        dut.io.tx_ready.toBoolean == true && dut.io.ready.toBoolean == false,
+        msg = "back to idle"
+      )
+
+      wait(10)
     }
   }
 }

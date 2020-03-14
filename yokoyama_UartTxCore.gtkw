@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Mar 12 00:50:20 2020
+[*] Sat Mar 14 03:45:21 2020
 [*]
 [dumpfile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartTxCore/test.vcd"
-[dumpfile_mtime] "Thu Mar 12 00:47:41 2020"
-[dumpfile_size] 160562
-[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/UartTxCore/yokoyama.gtkw"
-[timestart] 0
-[size] 2045 600
+[dumpfile_mtime] "Sat Mar 14 03:44:40 2020"
+[dumpfile_size] 45308
+[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/yokoyama_UartTxCore.gtkw"
+[timestart] 13979
+[size] 1920 1155
 [pos] -1 -1
-*-12.659439 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-4.869416 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [sst_width] 193
 [signals_width] 245
 [sst_expanded] 1
-[sst_vpaned_height] 167
+[sst_vpaned_height] 363
 @28
 TOP.clk
 TOP.io_valid
@@ -24,8 +24,11 @@ TOP.io_payload[7:0]
 TOP.UartTxCore.io_ready
 @820
 TOP.UartTxCore.fsm_stateReg_string[95:0]
-@28
+@29
 TOP.UartTxCore.io_tx_ready
+@24
+TOP.UartTxCore.n_bits_sent[2:0]
+@28
 TOP.io_txd
 [pattern_trace] 1
 [pattern_trace] 0
