@@ -1,7 +1,7 @@
 TOPNAME=uart_tinyfpga_bx
-CLASSNAME=Uart_TinyFPGA_BX
+CLASSNAME=UartToUpper_TinyFPGA_BX
 PCF=tinyfpga_bx.pcf
-SRC=Uart_TinyFPGA_BX.scala Uart.scala
+SRC=UartToUpper_TinyFPGA_BX.scala Uart.scala
 ICEVIEW=$(HOME)/Dropbox/monthly/201912/fpga/ice40_viewer/iceview_html.py
 
 $(TOPNAME).asc: $(TOPNAME).json $(PCF)
