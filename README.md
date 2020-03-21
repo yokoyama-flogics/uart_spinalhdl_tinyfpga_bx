@@ -12,6 +12,7 @@ on my work blog.
 - [Part 2: Improving the UART (Elaborating Design and Adding String Transmission)](https://flogics.com/wp/ja/2020/01/spinalhdl-uart-part2/)
 - [Part 3: Adding APB3 Bus to the UART](https://flogics.com/wp/ja/2020/02/spinalhdl-uart-part3/)
 - [Also Designed UART Rx](https://flogics.com/wp/ja/2020/02/spinalhdl-uart-rx/)
+- [Other Writings](https://flogics.com/wp/ja/category/spinalhdl/)
 
 ## Required Hardware
 
@@ -51,6 +52,10 @@ on my work blog.
   It generates layout views of your design, but it is optional.
 
 ## Building by make
+
+You can build ```UartToUpper_TinyFPGA_BX``` which runs TinyFPGA BX, and receive UART characters (from pin H2) at 115.2kbps and re-transmit them (from pin H9) after converting to upper cases if the characters are lower case.
+
+![UartToUpper_TinyFPGA_BX](image/uart_to_upper.svg)
 
 NOTE: If you run ice40_viewer, please modify 'ICEVIEW' line in the Makefile
 according to your installation.
