@@ -30,7 +30,7 @@ class UartApb3(
   val rx_ready = Reg(Bool) init (False)
 
   /*
-   * Instantiation of a UART Cores
+   * Instantiation of UART Cores
    */
   val uart_tx = new UartTxCore(
     len_data = 8,
