@@ -1,0 +1,64 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue Mar 24 07:43:11 2020
+[*]
+[dumpfile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/simWorkspace/SpinalUart/test.vcd"
+[dumpfile_mtime] "Tue Mar 24 07:42:30 2020"
+[dumpfile_size] 290002
+[savefile] "/Users/yokoyama/git_repo/uart_spinalhdl_tinyfpga_bx/yokoyama_SpinalUart.gtkw"
+[timestart] 0
+[size] 1607 818
+[pos] -1 -1
+*-13.497263 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.SpinalUart.
+[treeopen] TOP.SpinalUart.uartCtrl_1_.
+[sst_width] 193
+[signals_width] 296
+[sst_expanded] 1
+[sst_vpaned_height] 234
+@28
+TOP.clk
+TOP.io_valid
+@22
+TOP.io_payload[7:0]
+@28
+TOP.SpinalUart.io_ready
+TOP.SpinalUart.io_uart_rxd
+@200
+-
+@28
+TOP.SpinalUart.uartCtrl_1_.clockDivider_tick
+@24
+TOP.SpinalUart.uartCtrl_1_.io_config_clockDivider[19:0]
+@200
+-
+@24
+TOP.SpinalUart.uartCtrl_1_.tx.clockDivider_counter_value[2:0]
+@820
+TOP.SpinalUart.uartCtrl_1_.tx.stateMachine_state_string[47:0]
+@28
+TOP.io_uart_txd
+@200
+-
+@28
+TOP.SpinalUart.uartCtrl_1_.rx.io_samplingTick
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_synchroniser
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_samples_1
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_samples_2
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_samples_3
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_samples_4
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_value
+TOP.SpinalUart.uartCtrl_1_.rx.sampler_tick
+@820
+TOP.SpinalUart.uartCtrl_1_.rx.stateMachine_state_string[47:0]
+@24
+TOP.SpinalUart.uartCtrl_1_.rx.bitTimer_counter[2:0]
+@25
+TOP.SpinalUart.uartCtrl_1_.rx.bitCounter_value[2:0]
+@28
+TOP.SpinalUart.uartCtrl_1_.rx.io_read_valid
+@22
+TOP.SpinalUart.uartCtrl_1_.rx.io_read_payload[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
